@@ -3,15 +3,19 @@
 class Harvest_Cli extends CM_Cli_Runnable_Abstract {
 
     /**
-     * @param int $project
+     * @param int           $project
+     * @param DateTime|null $from
      */
-    public function projectWeek($project = null) {
+    public function projectWeek($project = null, DateTime $from = null) {
         if (null === $project) {
             $project = CM_Config::get()->Harvest_Cli->defaultProject;
         }
+        if (null === $from) {
+            $from = new DateTime('last monday');
+        }
+        $to = clone $from;
+        $to->add(new DateInterval('P7D'));
 
-        $from = new DateTime('2014-06-02');
-        $to = new DateTime('2014-06-08');
         /** @var DateTime[] $dayList */
         $dayList = array();
         $day = clone $from;
