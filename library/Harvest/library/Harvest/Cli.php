@@ -26,7 +26,7 @@ class Harvest_Cli extends CM_Cli_Runnable_Abstract {
         $dayHeaderList = Functional\map($dayList, function (DateTime $day) {
             return $day->format('D j.n.');
         });
-        $table->setHeaders(array_merge(array('Person'), $dayHeaderList));
+        $table->setHeaders(array_merge(array(null), $dayHeaderList));
         foreach ($projectHours as $userId => $hours) {
             $user = $users[$userId];
             $userFullname = $user['first_name'] . ' ' . $user['last_name'];
@@ -38,7 +38,7 @@ class Harvest_Cli extends CM_Cli_Runnable_Abstract {
             });
             $table->addRow(array_merge(array($userFullname), $hoursByDayList));
         }
-        echo $table->getTable();
+        $this->_getOutput()->write($table->getTable());
     }
 
     public static function getPackageName() {
