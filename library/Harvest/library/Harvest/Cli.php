@@ -27,9 +27,14 @@ class Harvest_Cli extends CM_Cli_Runnable_Abstract {
             return $day->format('D j.n.');
         });
         $table->setHeaders(array_merge(array(null), $dayHeaderList));
-        foreach ($projectHours as $userId => $hours) {
-            $user = $users[$userId];
+        foreach ($users as $user) {
+            $userId = $user['id'];
             $userFullname = $user['first_name'] . ' ' . $user['last_name'];
+            if (isset($projectHours[$userId])) {
+                $hours = $projectHours[$userId];
+            } else {
+                $hours = array();
+            }
             $hoursByDayList = Functional\map($dayList, function (DateTime $day) use ($hours) {
                 if (isset($hours[$day->format('Y-m-d')])) {
                     return $hours[$day->format('Y-m-d')];
@@ -62,6 +67,9 @@ class Harvest_Cli extends CM_Cli_Runnable_Abstract {
             $user = $dataItem['user'];
             $result[$user['id']] = $user;
         }
+        $result = Functional\select($result, function (array $user) {
+            return (bool) $user['is_active'];
+        });
         return $result;
     }
 
