@@ -36,8 +36,9 @@ class Harvest_Cli extends CM_Cli_Runnable_Abstract {
                 $hours = array();
             }
             $hoursByDayList = Functional\map($dayList, function (DateTime $day) use ($hours) {
-                if (isset($hours[$day->format('Y-m-d')])) {
-                    return $hours[$day->format('Y-m-d')];
+                $dayKey = $day->format('Y-m-d');
+                if (isset($hours[$dayKey])) {
+                    return gmdate('g:i', $hours[$dayKey] * 3600);
                 }
                 return null;
             });
