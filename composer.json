@@ -1,13 +1,25 @@
 {
-    "name": "cargomedia/cm-project",
-    "config": {
-        "bin-dir": "bin/"
-    },
-    "require": {
-        "cargomedia/cm": "~1.36.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "~3.7.10"
-    },
-    "minimum-stability": "alpha"
+  "name": "njam/harvest-cli",
+  "config": {
+    "bin-dir": "bin/"
+  },
+  "require": {
+    "cargomedia/cm": "~1.36.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~3.7.10"
+  },
+  "minimum-stability": "alpha",
+  "autoload": {
+    "psr-0": {
+      "Harvest_": "library/Harvest/library/"
+    }
+  },
+  "extra": {
+    "cm-modules": {
+      "Harvest": {
+        "path": "library/Harvest/"
+      }
+    }
+  }
 }
