@@ -14,12 +14,12 @@ class Harvest_Cli extends CM_Cli_Runnable_Abstract {
             $from = new DateTime('last monday');
         }
         $to = clone $from;
-        $to->add(new DateInterval('P7D'));
+        $to->add(new DateInterval('P1W'));
 
         /** @var DateTime[] $dayList */
         $dayList = array();
         $day = clone $from;
-        while ($day <= $to) {
+        while ($day < $to) {
             $dayList[] = clone $day;
             $day->add(new DateInterval('P1D'));
         }
