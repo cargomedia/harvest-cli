@@ -12,6 +12,7 @@ class Harvest_Cli extends CM_Cli_Runnable_Abstract {
 
         $from = new DateTime('2014-06-02');
         $to = new DateTime('2014-06-08');
+        /** @var DateTime[] $dayList */
         $dayList = array();
         $day = clone $from;
         while ($day <= $to) {
@@ -27,28 +28,26 @@ class Harvest_Cli extends CM_Cli_Runnable_Abstract {
             return $day->format('D j.n.');
         });
         $table->setHeaders(array_merge(array(null), $dayHeaderList));
-        foreach ($users as $user) {
-            $userId = $user['id'];
-            $userFullname = $user['first_name'] . ' ' . $user['last_name'];
-            if (isset($projectHours[$userId])) {
-                $hours = $projectHours[$userId];
-            } else {
-                $hours = array();
-            }
-            $hoursByDayList = Functional\map($dayList, function (DateTime $day) use ($hours) {
-                $dayKey = $day->format('Y-m-d');
-                if (isset($hours[$dayKey])) {
-                    $hours = $hours[$dayKey];
-                    if (0 == $hours) {
-                        return '~';
-                    }
-                    return round($hours, 1);
-                }
-                return null;
-            });
-            $table->addRow(array_merge(array($userFullname), $hoursByDayList));
-        }
+
+        $columnUsers = Functional\map($users, function (array $user) {
+            return $user['first_name'] . ' ' . $user['last_name'];
+        });
+        $table->addCol($columnUsers, 0);
+
         foreach ($dayList as $i => $day) {
+            $columnHours = Functional\map($users, function (array $user) use ($projectHours, $day) {
+                $hours = null;
+                $dayKey = $day->format('Y-m-d');
+                if (isset($projectHours[$user['id']][$dayKey])) {
+                    $hours = round($projectHours[$user['id']][$dayKey], 1);
+                    if (0 == $hours) {
+                        $hours = '~';
+                    }
+                }
+                return $hours;
+            });
+
+            $table->addCol($columnHours, $i + 1);
             $table->setAlign(1 + $i, CONSOLE_TABLE_ALIGN_RIGHT);
         }
         $this->_getOutput()->write($table->getTable());
