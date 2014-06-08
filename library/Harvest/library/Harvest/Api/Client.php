@@ -55,7 +55,7 @@ class Harvest_Api_Client extends CM_Class_Abstract {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'njam/harvest-cli');
+        curl_setopt($ch, CURLOPT_USERAGENT, 'cargomedia/harvest-cli');
         if (null !== $postData) {
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);

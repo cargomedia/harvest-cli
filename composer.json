@@ -1,5 +1,5 @@
 {
-  "name": "njam/harvest-cli",
+  "name": "cargomedia/harvest-cli",
   "config": {
     "bin-dir": "bin/"
   },
