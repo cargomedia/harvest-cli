@@ -38,7 +38,7 @@ class Harvest_Cli extends CM_Cli_Runnable_Abstract {
             $hoursByDayList = Functional\map($dayList, function (DateTime $day) use ($hours) {
                 $dayKey = $day->format('Y-m-d');
                 if (isset($hours[$dayKey])) {
-                    $hours = $hours[$dayKey];
+                    $hours = (int) $hours[$dayKey];
                     if (0 === $hours) {
                         return '~';
                     }
@@ -47,6 +47,9 @@ class Harvest_Cli extends CM_Cli_Runnable_Abstract {
                 return null;
             });
             $table->addRow(array_merge(array($userFullname), $hoursByDayList));
+        }
+        foreach ($dayList as $i => $day) {
+            $table->setAlign(1 + $i, CONSOLE_TABLE_ALIGN_RIGHT);
         }
         $this->_getOutput()->write($table->getTable());
     }
