@@ -9,17 +9,60 @@ class Harvest_Cli extends CM_Cli_Runnable_Abstract {
         if (null === $project) {
             $project = CM_Config::get()->Harvest_Cli->defaultProject;
         }
-        $project = (int) $project;
-        $client = new Harvest_Api_Client();
-        $data = $client->sendRequest('/projects/' . $project . '/entries', ['from' => '20140602', 'to' => '20140608']);
 
-        $entryList = Functional\map($data, function (array $entry) {
+        $from = new DateTime('2014-06-02');
+        $to = new DateTime('2014-06-08');
+        $users = $this->_getUsers();
+        $projectHours = $this->_getProjectHoursByUser($project, $from, $to);
+        foreach ($projectHours as $userId => $hours) {
+            $user = $users[$userId];
+            $userFullname = $user['first_name'] . ' ' . $user['last_name'];
+            echo "$userFullname\n";
+            print_r($hours);
+        }
+    }
+
+    public static function getPackageName() {
+        return 'harvest';
+    }
+
+    /**
+     * @return Harvest_Api_Client
+     */
+    private function _getClient() {
+        return new Harvest_Api_Client();
+    }
+
+    /**
+     * @return array
+     */
+    private function _getUsers() {
+        $data = $this->_getClient()->sendRequest('/people');
+        $result = array();
+        foreach ($data as $dataItem) {
+            $user = $dataItem['user'];
+            $result[$user['id']] = $user;
+        }
+        return $result;
+    }
+
+    /**
+     * @param int      $project
+     * @param DateTime $from
+     * @param DateTime $to
+     * @return array
+     */
+    private function _getProjectHoursByUser($project, DateTime $from, DateTime $to) {
+        $project = (int) $project;
+        $data = $this->_getClient()->sendRequest('/projects/' . $project . '/entries', ['from' => $from->format('Ymd'), 'to' => $to->format('Ymd')]);
+        $data = Functional\map($data, function (array $entry) {
             return $entry['day_entry'];
         });
-        $groupedUser = Functional\group($entryList, function (array $entry) {
+
+        $result = Functional\group($data, function (array $entry) {
             return $entry['user_id'];
         });
-        foreach ($groupedUser as &$entryListUser) {
+        foreach ($result as &$entryListUser) {
             $entryListUser = Functional\group($entryListUser, function (array $entry) {
                 return $entry['spent_at'];
             });
@@ -29,11 +72,6 @@ class Harvest_Cli extends CM_Cli_Runnable_Abstract {
                 }, 0);
             }
         }
-
-        print_r($groupedUser);
-    }
-
-    public static function getPackageName() {
-        return 'harvest';
+        return $result;
     }
 }

@@ -36,14 +36,13 @@ class Harvest_Api_Client extends CM_Class_Abstract {
     /**
      * @param string      $path
      * @param array|null  $query
-     * @param string|null $data
+     * @param string|null $postData
      * @throws CM_Exception
      * @return array
      */
-    public function sendRequest($path, array $query = null, $data = null) {
+    public function sendRequest($path, array $query = null, $postData = null) {
         $credentials = $this->_email . ':' . $this->_password;
         $url = CM_Util::link('https://' . $this->_account . '.harvestapp.com' . $path, $query);
-        $data = (string) $data;
 
         $headers = array(
             'Content-type: application/xml',
@@ -57,15 +56,17 @@ class Harvest_Api_Client extends CM_Class_Abstract {
         curl_setopt($ch, CURLOPT_TIMEOUT, 60);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_USERAGENT, 'njam/harvest-cli');
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        if (null !== $postData) {
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+        }
 
-        $data = curl_exec($ch);
-        if (false === $data) {
+        $postData = curl_exec($ch);
+        if (false === $postData) {
             throw new CM_Exception('Request `' . $query . '` failed: ' . curl_error($ch));
         }
         curl_close($ch);
 
-        return CM_Params::decode($data, true);
+        return CM_Params::decode($postData, true);
     }
 }
