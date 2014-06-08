@@ -12,14 +12,33 @@ class Harvest_Cli extends CM_Cli_Runnable_Abstract {
 
         $from = new DateTime('2014-06-02');
         $to = new DateTime('2014-06-08');
+        $dayList = array();
+        $day = clone $from;
+        while ($day <= $to) {
+            $dayList[] = clone $day;
+            $day->add(new DateInterval('P1D'));
+        }
+
         $users = $this->_getUsers();
         $projectHours = $this->_getProjectHoursByUser($project, $from, $to);
+
+        $table = new Console_Table();
+        $dayHeaderList = Functional\map($dayList, function (DateTime $day) {
+            return $day->format('D j.n.');
+        });
+        $table->setHeaders(array_merge(array('Person'), $dayHeaderList));
         foreach ($projectHours as $userId => $hours) {
             $user = $users[$userId];
             $userFullname = $user['first_name'] . ' ' . $user['last_name'];
-            echo "$userFullname\n";
-            print_r($hours);
+            $hoursByDayList = Functional\map($dayList, function (DateTime $day) use ($hours) {
+                if (isset($hours[$day->format('Y-m-d')])) {
+                    return $hours[$day->format('Y-m-d')];
+                }
+                return null;
+            });
+            $table->addRow(array_merge(array($userFullname), $hoursByDayList));
         }
+        echo $table->getTable();
     }
 
     public static function getPackageName() {
