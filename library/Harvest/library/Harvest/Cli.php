@@ -57,6 +57,15 @@ class Harvest_Cli extends CM_Cli_Runnable_Abstract {
         $this->_getOutput()->write($table->getTable());
     }
 
+    /**
+     * @param int $project
+     */
+    public function projectWeekLast($project = null) {
+        $from = new DateTime('last monday');
+        $from->sub(new DateInterval('P1W'));
+        $this->projectWeek($project, $from);
+    }
+
     public static function getPackageName() {
         return 'harvest';
     }
