@@ -1,0 +1,5 @@
+/vendor
+/bin
+
+/resources/config/local.php
+/tmp
