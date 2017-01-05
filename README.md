@@ -1,8 +1,24 @@
 harvest-cli
 ===========
 
+Weekly Harvest reports on the console.
+
+Installation & Configuration
+----------------------------
+Install dependencies:
 ```
-$ bin/cm harvest project-week
+composer install
+```
+
+Create a configuration file and edit to your needs:
+```
+cp resources/config/default.php resources/config/local.php
+vi resources/config/local.php
+```
+
+Now you can print weekly reports of your Harvest projects:
+```
+bin/cm harvest project-week
 +------------+----------+----------+----------+----------+----------+----------+----------+
 |            | Mon 2.6. | Tue 3.6. | Wed 4.6. | Thu 5.6. | Fri 6.6. | Sat 7.6. | Sun 8.6. |
 +------------+----------+----------+----------+----------+----------+----------+----------+

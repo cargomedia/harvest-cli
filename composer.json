@@ -4,13 +4,11 @@
     "bin-dir": "bin/"
   },
   "require": {
-    "cargomedia/cm": "~1.36.0",
+    "cargomedia/cm": "~1.219.0",
     "pear/console_table": "~1.2.0"
   },
-  "require-dev": {
-    "phpunit/phpunit": "~3.7.10"
-  },
-  "minimum-stability": "alpha",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "autoload": {
     "psr-0": {
       "Harvest_": "library/Harvest/library/"

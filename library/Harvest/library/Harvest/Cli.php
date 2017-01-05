@@ -54,7 +54,7 @@ class Harvest_Cli extends CM_Cli_Runnable_Abstract {
             $table->addCol($columnHours, $i + 1);
             $table->setAlign(1 + $i, CONSOLE_TABLE_ALIGN_RIGHT);
         }
-        $this->_getOutput()->write($table->getTable());
+        $this->_getStreamOutput()->write($table->getTable());
     }
 
     /**
