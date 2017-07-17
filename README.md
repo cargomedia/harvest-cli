@@ -5,10 +5,6 @@ Weekly Harvest reports on the console.
 
 Installation & Configuration
 ----------------------------
-Install dependencies:
-```
-composer install
-```
 
 Create a configuration file and edit to your needs:
 ```
@@ -16,9 +12,14 @@ cp resources/config/default.php resources/config/local.php
 vi resources/config/local.php
 ```
 
-Now you can print weekly reports of your Harvest projects:
+Build the Docker image:
 ```
-bin/cm harvest project-week
+docker build -t cargomedia/harvest-cli:latest .
+```
+
+Run binary with Docker:
+```
+docker run cargomedia/harvest-cli:latest project-week
 +------------+----------+----------+----------+----------+----------+----------+----------+
 |            | Mon 2.6. | Tue 3.6. | Wed 4.6. | Thu 5.6. | Fri 6.6. | Sat 7.6. | Sun 8.6. |
 +------------+----------+----------+----------+----------+----------+----------+----------+
@@ -36,4 +37,11 @@ bin/cm harvest project-week
 | Timo       |          |          |          |          |          |          |          |
 | Tomasz     |      4.3 |      8.1 |     12.2 |     12.2 |     11.4 |     11.7 |        ~ |
 +------------+----------+----------+----------+----------+----------+----------+----------+
+```
+
+Development
+-----------
+Mount project volume and run with Docker:
+```
+docker run -v $(pwd):/opt/harvest-cli cargomedia/harvest-cli:latest project-week
 ```
