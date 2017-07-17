@@ -1,5 +1,6 @@
 /vendor
 /bin
 
+/data
 /resources/config/local.php
 /tmp
