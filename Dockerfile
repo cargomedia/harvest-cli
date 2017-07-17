@@ -4,4 +4,4 @@ ADD . /opt/harvest-cli
 WORKDIR /opt/harvest-cli
 RUN composer install
 
-ENTRYPOINT ["/opt/harvest-cli/bin/cm", "harvest"]
+ENTRYPOINT ["bin/cm", "harvest"]
